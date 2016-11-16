@@ -1,0 +1,95 @@
+version: '2'
+
+networks:
+  devbox:
+    driver: "bridge"
+
+services:
+
+  application:
+    image: tianon/true
+    volumes:
+      - ./site:/var/www
+
+  workspace:
+    build:
+      context: ./src/workspace
+      args:
+          - INSTALL_XDEBUG=true
+          - INSTALL_NODE=false
+          - COMPOSER_GLOBAL_INSTALL=true
+          - INSTALL_WORKSPACE_SSH=false
+          - PUID=1000
+          - PGID=1000
+          - NODE_VERSION=stable
+    volumes_from:
+      - application
+    ports:
+       - "222:22"
+    tty: true
+    networks:
+      - devbox
+
+  web:
+    build:
+      context: ./src/web
+      dockerfile: Dockerfile
+    volumes_from:
+      - application
+    ports:
+      - "80:80"
+    links:
+      - app
+    networks:
+      - devbox
+
+  app:
+    build:
+      context: ./src/app
+      dockerfile: Dockerfile
+      args:
+        - INSTALL_MEMCACHED=false
+        - INSTALL_OPCACHE=false
+    volumes_from:
+      - application
+    links:
+      - workspace
+    networks:
+      - devbox
+  
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
+    links:
+      - workspace
+    networks:
+      - devbox
+
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: gordianknot
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: homestead
+    ports:
+      - "3306:3306"
+    networks:
+      - devbox
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+    networks:
+      - devbox
+
+  elasticsearch:
+    image: elasticsearch:latest
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - devbox
