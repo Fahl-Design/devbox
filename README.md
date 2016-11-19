@@ -5,7 +5,7 @@ Docker Native
 [https://download.docker.com/mac/stable/Docker.dmg](https://download.docker.com/mac/stable/Docker.dmg)
 
 ### Usage
-- Clone this repository `git clone git@bitbucket.org:vicemedia/laravel-dev-environment.git ./[your-project-name]`  
+- Clone this repository `git clone git@github.com:brianvice/devbox.git ./[your-project-name]`  
 - Update the docker-compose.yml file:  
 ```
 volumes_source:
