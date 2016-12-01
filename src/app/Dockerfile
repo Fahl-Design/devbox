@@ -13,13 +13,18 @@ RUN apt-get update && \
         libfreetype6-dev \
         libssl-dev \
         libmcrypt-dev \
-        libexif-dev
+        libexif-dev \
+        libicu-dev
 
 # Install the PHP mcrypt extention
 RUN docker-php-ext-install mcrypt
 
 # Install the PHP pdo_mysql extention
 RUN docker-php-ext-install pdo_mysql
+
+# Install the international extension
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
 
 #####################################
 # gd:
