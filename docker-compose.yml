@@ -9,7 +9,7 @@ services:
   application:
     image: tianon/true
     volumes:
-      - ./site:/var/www
+      - /mnt/Development/Projects/recruiter:/var/www
 
   workspace:
     build:
@@ -74,6 +74,8 @@ services:
       MYSQL_USER: homestead
       MYSQL_PASSWORD: secret
       MYSQL_DATABASE: homestead
+    volumes:
+      - data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
@@ -93,3 +95,6 @@ services:
       - "9300:9300"
     networks:
       - devbox
+
+volumes:
+  data: {}
